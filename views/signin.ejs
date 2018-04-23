@@ -12,4 +12,39 @@
 			<div class="submit">登录</div>
 		</form>		
 	</div>
+	<script>
+		$(window).keyup(function(e){
+			//console.log(e.keyCode)
+			if (e.keyCode == 13) {
+				$('.submit').click()
+			}
+		})
+		$('.submit').click(() => {
+			if ($('input[name=name]').val().trim() === '' || $('input[name=password]').val().trim() === '') {
+				fade('请输入用户名或密码')
+			} else {
+				// console.log($('.form').serialize())
+				$.ajax({
+					url: '/signin',
+					type: 'POST',
+					data: $('.form').serialize(),
+					cache: false,
+					dataType: 'json',
+					success: function(res) {
+						if (res.status === 1) {
+							fade('登陆成功')
+							setTimeout(() => {
+								window.location.href = '/posts'
+							}, 1500)
+						} else {
+							fade(res.msg)
+						}
+					},
+					error: function(err) {
+						console.log(err)
+					}
+				})
+			}
+		})
+	</script>
 <% include footer %>

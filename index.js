@@ -7,7 +7,7 @@ const session = require('koa-session-minimal')
 const MysqlStore = require('koa-mysql-session')
 const config = require('./config/default.js')
 const views = require('koa-views')
-// const koaStatic = require('koa-static')
+const koaStatic = require('koa-static')
 const staticCache = require('koa-static-cache')
 const app = new Koa()
 
@@ -26,9 +26,9 @@ app.use(session({
 }))
 
 // 配置静态资源加载中间件
-// app.use(koaStatic(
-//   path.join(__dirname , './public')
-// ))
+app.use(koaStatic(
+  path.join(__dirname , './public')
+))
 
 // 缓存
 app.use(staticCache(path.join(__dirname, './public'), { dynamic: true }, {
@@ -49,8 +49,8 @@ app.use(bodyParser({
 //  路由(我们先注释三个，等后面添加好了再取消注释，因为我们还没有定义路由，稍后会先实现注册)
 app.use(require('./routers/signin.js').routes())
 app.use(require('./routers/signup.js').routes())
-//app.use(require('./routers/posts.js').routes())
-//app.use(require('./routers/signout.js').routes())
+app.use(require('./routers/posts.js').routes())
+app.use(require('./routers/signout.js').routes())
 
 // const main = ctx => {
 //     ctx.response.body = 'Hello, World'

@@ -8,6 +8,7 @@ const fs = require('fs')
 
 // 注册页面
 router.get('/signup', async(ctx, next) => {
+    // console.log(ctx)
     await checkNotLogin(ctx)
     await ctx.render('signup', {
         session: ctx.session,
@@ -25,7 +26,7 @@ router.post('/signup', async(ctx, next) => {
 
     await userModel.findDataByName(user.name)
         .then(async (result) => {
-            console.log(result)
+            // console.log(result)
             if (result.length) {
                 try {
                     throw Error('用户已存在')
@@ -45,11 +46,11 @@ router.post('/signup', async(ctx, next) => {
                 let base64Data = user.avator.replace(/^data:image\/\w+;base64,/, "")
                 let dataBuffer = new Buffer(base64Data, 'base64')
                 let getName = Number(Math.random().toString().substr(3)).toString(36) + Date.now()
-                await fs.writeFile('./public/images' + getName + '.png', dataBuffer, err => {
+                await fs.writeFile('./public/images/' + getName + '.png', dataBuffer, err => {
                     if (err) throw err
                     console.log('头像上传成功')
                 })
-                await userModel.insertData([user.name, md5(user.pass), getName, moment().format('YYY-MM-DD HH:mm:ss')])
+                await userModel.insertData([user.name, md5(user.pass), getName, moment().format('YYYY-MM-DD HH:mm:ss')])
                     .then(res => {
                         console.log('注册成功')
                         // 注册成功
@@ -59,5 +60,5 @@ router.post('/signup', async(ctx, next) => {
                     })
             }
         })
-})
+    })
 module.exports = router
